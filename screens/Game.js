@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { TouchableHighlight, StyleSheet, Text, View } from 'react-native';
 import player from '../config/player';
 import Waiting from './Waiting';
 import Actions from '../actions/Actions';
@@ -64,7 +64,7 @@ class Game extends React.Component {
     console.log("At game!");
     console.log(this.state);
     const content = this.state.game.turn.waiting ?
-      <Waiting isClicked={() => this.startTurn()}/> :
+      <Waiting isClicked={() => this.startTurn()} player={this.state.game.turn.player}/> :
       <Actions />;
     return(
       <View>

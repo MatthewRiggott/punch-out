@@ -1,34 +1,36 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableHighlight, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
 class Waiting extends React.Component {
-
-  continue = () => {
-    this.props.isClicked();
-  }
-
   render() {
-    const waitingText = `Player ${this.props.player }, tap to continue`;
+    const waitingText = `Player ${this.props.player} tap to continue`;
+    console.log('waiting');
     return (
-      <TouchableOpacity style={ styles.container } onPress={() => this.continue()}>
-        <View style={ styles.centerText }>
-          <Text>{ waitingText }</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableHighlight onPress={() => this.props.isClicked() }>
+          <View style={styles.button} >
+            <Text style={{color: 'red'}}>{ waitingText }</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
+    paddingTop: 60,
+    alignItems: 'center'
   },
-  centerText: {
-    flex: 1,
+  button: {
+    marginBottom: 30,
+    width: 260,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#2196F3',
+    padding: 50,
+  },
+  buttonText: {
+    padding: 50,
+    color: 'white'
   }
 });
 
