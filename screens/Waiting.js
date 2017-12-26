@@ -18,17 +18,20 @@ class Waiting extends React.Component {
 }
 const styles = StyleSheet.create({
   container: {
+    height: 200,
     paddingTop: 60,
     alignItems: 'center'
   },
   button: {
+    flex: 1,
     marginBottom: 30,
-    width: 260,
+    // width: 260,
     alignItems: 'center',
     backgroundColor: '#2196F3',
     padding: 50,
   },
   buttonText: {
+    flex: 2,
     padding: 50,
     color: 'white'
   }

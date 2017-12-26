@@ -13,42 +13,82 @@ class Game extends React.Component {
       game: {
         status: '',
         turn: {
+          round: 1,
           waiting: true,
-          player: 0,
+          player: 1,
         },
       },
       players: [
         player,
         player
-      ]
+      ],
     }
   }
 
   getNextPlayer = () => {
-    const totalPlayers = this.state.players.length;
+    const totalPlayers = this.state.players.length + 1;
     const nextPlayer = this.state.game.turn.player + 1;
-    return nextPlayer !== totalPlayers ? nextPlayer : 0;
+    return nextPlayer !== totalPlayers ? nextPlayer : 1;
   }
 
   startTurn = () => {
-    const gameState = this.state.game;
+    const game = this.state.game;
+    const turn = game.turn;
+    const status = `Player ${turn.player} action`;
+
     const nextTurn = {
+      status,
       turn: {
-        waiting: true,
-        player: this.state.player,
+        round: turn.round,
+        waiting: false,
+        player: turn.player,
       },
     }
 
-    const updatedState = Object.assign(gameState, nextTurn);
+    const updatedState = Object.assign(game, nextTurn);
     this.setState({
       game: updatedState,
     });
+  }
+
+  setPlayerAction = (playerNum, action) => {
+    const game = this.state.game;
+    const turn = game.turn;
+    const players = this.state.players;
+    const playerObj = playerNum === 1 ? players[0] : players[1];
+    const player = {
+      action,
+    };
+    const updatePlayer = Object.assign({}, playerObj, player);
+    let updatePlayers = [];
+    if (playerNum == 1) {
+      updatePlayers = [
+        updatePlayer,
+        players[1],
+      ];
+    } else {
+      updatePlayers = [
+        players[0],
+        updatePlayer,
+      ];
+    }
+    this.setState({
+      players: updatePlayers,
+    }, () => {
+      if (playerNum === 2) {
+        this.endRoundActions();
+      } else {
+        this.setNextPlayer();
+      }
+    });
+    // const updateGameState = Object.assign({}, players, updatePlayers )
   }
 
   setNextPlayer = () => {
     const gameState = this.state.game;
     const nextTurn = {
       turn: {
+        round: gameState.turn.round,
         waiting: true,
         player: this.getNextPlayer(),
       },
@@ -60,15 +100,67 @@ class Game extends React.Component {
     });
   }
 
+  endRoundActions = () => {
+    const players = this.state.players;
+    const player1 = players[0];
+    const player2 = players[1];
+    const action1 = player1.action;
+    const action2 = player2.action;
+    const updatedPlayers = this.takeAction(player1, action1, player2, action2);
+    console.log('endRoundActions');
+    console.log(updatedPlayers);
+
+    this.setState({
+      players: updatedPlayers,
+    }, () => this.nextRound())
+
+  }
+  takeAction = (player1, action1, player2, action2) => {
+    let updatePlayers = []
+    if (action1 == 'charge' && action2 == 'charge') {
+      player1.action = '';
+      player2.action = '';
+      player1.charge += 1;
+      player2.charge += 1;
+      updatePlayers = [player1, player2];
+    }
+
+    return updatePlayers;
+  }
+
+  nextRound = () => {
+    const game = this.state.game;
+    const turn = game.turn;
+    const nextGameRound = {
+      status: 'Start next Round',
+      turn: {
+        round: turn.round + 1,
+        waiting: true,
+        player: 1,
+      }
+    }
+    this.setState({
+      game: nextGameRound,
+    });
+  }
+
   render() {
     console.log("At game!");
-    console.log(this.state);
+    console.log(this.state.game);
+    console.log(this.state.players);
+    const turn = this.state.game.turn;
+    const players = this.state.players;
+    const playerObj = turn.player === 1 ? players[0] : players[1];
     const content = this.state.game.turn.waiting ?
-      <Waiting isClicked={() => this.startTurn()} player={this.state.game.turn.player}/> :
-      <Actions />;
+      <Waiting isClicked={() => this.startTurn()} player={turn.player}/> :
+      <Actions
+        player={turn.player}
+        setPlayerAction={(player, action) => this.setPlayerAction(player, action)}
+        playerObj
+      />;
     return(
-      <View>
-        <Text>This is the game.</Text>
+      <View style={{flex: 1,}}>
+        <Text>This is Round {turn.round}</Text>
         { content }
       </View>
     );
