@@ -11,9 +11,19 @@ class Actions extends React.Component {
   }
 
   render() {
+    console.log(this.props.playerObj);
+    const player = this.props.playerObj;
+    let disable = false;
+    let msg = '';
+    if (player.charge <= 0) {
+      disable = true;
+      msg = 'Need Charge To Attack';
+    }
     return(
       <View style={{height: 200,}}>
+        <Text>{msg}</Text>
         <TouchableOpacity
+          disabled={disable}
           style={{flex: 1, backgroundColor: 'red',}}
           onPress={(action) => this.takeAction('attack')}
         >
