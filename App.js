@@ -2,11 +2,12 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Menu from './screens/Menu';
+import Logo from './screens/Logo';
 
 class HomeScreen extends React.Component {
   continue = () => {
     console.log("clicked");
-    this.props.navigation.navigate('Menu');
+    this.props.navigation.navigate('Logo');
   }
 
   render() {
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
 
 const App = StackNavigator({
   Home: { screen: HomeScreen },
-  Menu: { screen: Menu}
+  Logo: { screen: Logo},
 });
 
 export default App;
